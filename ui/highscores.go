@@ -76,30 +76,32 @@ func (u *Ui) readHs() [5]hs {
 	}
 	for _, line := range lines {
 		pair := strings.Split(line, " ")
-		temp_name := ""
-		if len(pair) > 2 {
-			for i := 0; i < len(pair)-1; i++ {
-				temp_name += pair[i]
-			}
-			pair[0] = temp_name
-			pair[1] = pair[len(pair)-1]
-		}
-		if strings.HasSuffix(pair[1], "\r") {
-			pair[1] = pair[1][:len(pair[1])-1]
-		}
-		score, err := strconv.Atoi(pair[1])
-		check(err)
-		user := hs{pair[0], score}
-		// insert score into top 5 position
-		for i := 0; i < 5; i++ {
-			if user.score > top[i].score {
-				for j, temp := i, top[i]; j < 4; j++ {
-					temp2 := top[j+1]
-					top[j+1] = temp
-					temp = temp2
+		if len(pair) > 1 {
+			temp_name := ""
+			if len(pair) > 2 {
+				for i := 0; i < len(pair)-1; i++ {
+					temp_name += pair[i]
 				}
-				top[i] = user
-				break
+				pair[0] = temp_name
+				pair[1] = pair[len(pair)-1]
+			}
+			if strings.HasSuffix(pair[1], "\r") {
+				pair[1] = pair[1][:len(pair[1])-1]
+			}
+			score, err := strconv.Atoi(pair[1])
+			check(err)
+			user := hs{pair[0], score}
+			// insert score into top 5 position
+			for i := 0; i < 5; i++ {
+				if user.score > top[i].score {
+					for j, temp := i, top[i]; j < 4; j++ {
+						temp2 := top[j+1]
+						top[j+1] = temp
+						temp = temp2
+					}
+					top[i] = user
+					break
+				}
 			}
 		}
 	}
