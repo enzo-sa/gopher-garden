@@ -42,9 +42,9 @@ For a complete installation of Gopher-Garden, please perform the following steps
 
 *	Once the latest version of Go is installed, please install the system-specific dependencies to run [Gio](https://gioui.org/) applications [here](https://gioui.org/#installation).
 
-*	Once these preliminary steps are complete, Gopher-Garden can be run by initializing a go module file in a new folder and running the code hosted on github.	
-	*	The module initialization can be done as so: <pre><code>go mod init gopher-garden</pre></code> **Note:** This command must be run in the directory in which you want to initialize the module.
-	*	Next, you may run the main Go package from github while in the same directory you initialized the module file in: <pre><code>go run github.com/enzo-sa/gopher-garden/main</pre></code>
+*	Once these preliminary steps are complete, Gopher-Garden can be installed. It would be simpler to use modules and have go run the main package remotely hosted, however because highscores are saved in a local file, this is not an option. To install Gopher-Garden it is necessary  to install the repository on your local machine, and this can be done via cloning the repository or downloading the code.
+*	Once you have a local copy of the repository, move into the 'gopher-garden/main' directory, and run the following command.
+<pre><code>go run main.go</pre></code>
 Following these steps should allow you to run the game, however if you come across any issues, feel free to notify me through github.
 
 ## CREDITS:
