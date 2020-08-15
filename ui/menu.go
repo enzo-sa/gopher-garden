@@ -66,17 +66,17 @@ func (b *btn) Layout(gtx layout.Context, img paint.ImageOp, hs bool) layout.Dime
 
 // text field for getting user's name
 func (u *Ui) getName() {
-	for _, e := range u.name_editor.Events() {
+	for _, e := range u.nameEditor.Events() {
 		if e, ok := e.(widget.SubmitEvent); ok {
 			u.name = e.Text
-			u.name_editor.SetText("")
+			u.nameEditor.SetText("")
 		}
 	}
 	if u.name == "" {
 		defer op.Push(u.gtx.Ops).Pop()
 		op.Offset(f32.Pt(WidthPx/2.325, HeightPx/2.1)).Add(u.gtx.Ops)
 		u.th.Color.Text = color.RGBA{0xFF, 0xFF, 0xFF, 0xFF}
-		e := material.Editor(u.th, u.name_editor, "Enter Name")
+		e := material.Editor(u.th, u.nameEditor, "Enter Name")
 		e.Font.Style = text.Italic
 		border := widget.Border{Color: color.RGBA{A: 0xFF}, CornerRadius: unit.Dp(8), Width: unit.Dp(2)}
 		border.Layout(u.gtx, func(gtx layout.Context) layout.Dimensions {
@@ -100,19 +100,19 @@ func (u *Ui) mainMenu() {
 		}),
 		// new game button
 		layout.Rigid(func(gtx layout.Context) layout.Dimensions {
-			return u.newgame_btn.Layout(gtx, newgameImg, u.highscores_btn.pressed)
+			return u.newgameBtn.Layout(gtx, newgameImg, u.highscoresBtn.pressed)
 		}),
 		// highscores button
 		layout.Rigid(func(gtx layout.Context) layout.Dimensions {
-			return u.highscores_btn.Layout(gtx, highscoresImg, u.highscores_btn.pressed)
+			return u.highscoresBtn.Layout(gtx, highscoresImg, u.highscoresBtn.pressed)
 		}),
 		// back button
 		layout.Rigid(func(gtx layout.Context) layout.Dimensions {
-			return u.backmenu_btn.Layout(gtx, backImg, u.highscores_btn.pressed)
+			return u.backmenuBtn.Layout(gtx, backImg, u.highscoresBtn.pressed)
 		}),
 		// exit button
 		layout.Rigid(func(gtx layout.Context) layout.Dimensions {
-			return u.exit_btn.Layout(gtx, exitImg, u.highscores_btn.pressed)
+			return u.exitBtn.Layout(gtx, exitImg, u.highscoresBtn.pressed)
 		}),
 	)
 }
@@ -181,7 +181,7 @@ func (u *Ui) drawHs() {
 			paint.PaintOp{Rect: f32.Rect(WidthPx/6, 0, WidthPx/1.3, topMenuPx)}.Add(u.gtx.Ops)
 			tempst := op.Push(u.gtx.Ops)
 			op.Offset(f32.Pt(topMenuPx*3, 0)).Add(u.gtx.Ops)
-			u.backhighscores_btn.Layout(u.gtx, backImg, u.highscores_btn.pressed)
+			u.backhighscoresBtn.Layout(u.gtx, backImg, u.highscoresBtn.pressed)
 			tempst.Pop()
 			return layout.Dimensions{Size: image.Pt(int(WidthPx/1.02), int(topMenuPx))}
 		}),
@@ -213,7 +213,7 @@ func (u *Ui) gameOver() {
 			return layout.Dimensions{Size: image.Pt(int(topMenuPx), int(HeightPx/4))}
 		}),
 		layout.Rigid(func(gtx layout.Context) layout.Dimensions {
-			return u.continue_btn.Layout(gtx, continueImg, u.highscores_btn.pressed)
+			return u.continueBtn.Layout(gtx, continueImg, u.highscoresBtn.pressed)
 		}),
 	)
 }
@@ -245,7 +245,7 @@ func (u *Ui) topMenu() {
 		}),
 		// menu button
 		layout.Rigid(func(gtx layout.Context) layout.Dimensions {
-			return u.menu_btn.Layout(gtx, menuImg, u.highscores_btn.pressed)
+			return u.menuBtn.Layout(gtx, menuImg, u.highscoresBtn.pressed)
 		}),
 	)
 }
