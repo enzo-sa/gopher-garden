@@ -123,7 +123,7 @@ func (v *hs) Layout(gtx layout.Context) layout.Dimensions {
 	if v.score > -1 {
 		scr = strconv.Itoa(v.score)
 		if len(scr) > 4 {
-			scr = scr[0:5] + "..."
+			scr = scr[0:4] + "..."
 		}
 	} else {
 		scr = "N\\A"
@@ -132,7 +132,7 @@ func (v *hs) Layout(gtx layout.Context) layout.Dimensions {
 	if v.name != "" {
 		nm = v.name
 		if len(nm) > 5 {
-			nm = nm[0:6] + "..."
+			nm = nm[0:5] + "..."
 		}
 	} else {
 		nm = "N\\A"
