@@ -1,6 +1,6 @@
 # Gopher-Garden
 ## Overview:
-[![License](https://img.shields.io/badge/license-BSD--3--Clause-red)](https://github.com/enzo-sa/gopher-garden/blob/master/LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/enzo-sa/gopher-garden)](https://goreportcard.com/report/github.com/enzo-sa/gopher-garden) [![License](https://img.shields.io/badge/license-BSD--3--Clause-red)](https://github.com/enzo-sa/gopher-garden/blob/master/LICENSE)
 ### Play as Garry the Gopher and collect as many carrots as you can whilst avoiding the evil overlords of the garden: _**the snakes**_!
 ![gopher-garden](https://github.com/enzo-sa/gopher-garden/blob/master/gopher-garden.png)
 * Gopher-Garden is a 2D game in which you control Garry the Gopher who moves around a garden and who's goal is to eat as many carrots as he can whilst avoiding deadly snakes which are in constant roam around the garden.
