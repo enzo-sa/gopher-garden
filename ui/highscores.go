@@ -67,7 +67,7 @@ func (u *Ui) updateHs() {
 
 // returns top 5 highscore and name value pairs
 func (u *Ui) readHs() [5]hs {
-	var top = [...]hs{hs{"", -1}, hs{"", -1}, hs{"", -1}, hs{"", -1}, hs{"", -1}}
+	var top = [...]hs{{"", -1}, {"", -1}, {"", -1}, {"", -1}, {"", -1}}
 	f, err := ioutil.ReadFile("highscores.txt")
 	check(err)
 	lines := strings.Split(string(f), "\n")
