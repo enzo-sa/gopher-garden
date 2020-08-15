@@ -7,6 +7,7 @@ import (
 
 // all game logic is handled in engine
 
+// constants that set core game values
 const (
 	Holes      = 5
 	Snakes     = 3
@@ -15,18 +16,17 @@ const (
 	LawnArea   = LawnLength * LawnLength
 )
 
-// garden stores main info for game to be played
+// Garden stores main info for game to be played
 type Garden struct {
 	Lawn  *[LawnArea]Grass
 	ind   indeces
 	Score int
 	Dead  bool
-	// prev_hole stores the previous hole the gopher was in before a swap
-	prev_hole int // -1 if gopher has not just made a hole swap
+	// prevHole stores the previous hole the gopher was in before a swap
+	prevHole int // -1 if gopher has not just made a hole swap
 }
 
-// stores indeces relative to Lawn[] of each important
-// game piece
+// stores indeces relative to Lawn[] of each important game piece
 type indeces struct {
 	player  int
 	holes   [Holes]int
@@ -34,7 +34,7 @@ type indeces struct {
 	carrots [Carrots]int
 }
 
-// individual elements Lawn is composed of
+// Grass holds all possible info for single grass block
 type Grass struct {
 	Off    f32.Point
 	Snake  entity
@@ -48,7 +48,7 @@ type entity struct {
 	Direc int // 0-up, 1-down, 2-right, 3-left
 }
 
-// initialize new Garden for new game
+// NewGame initializes a new Garden
 func NewGame() *Garden {
 	var ga Garden
 	var Lawn [LawnArea]Grass
@@ -74,18 +74,18 @@ func NewGame() *Garden {
 	return &ga
 }
 
-// key handling for gopher movement
-// returns wether update was caused by the key
+// HandleKey handles key press and returns wether key was valid input
 func (ga *Garden) HandleKey(key string) bool {
 	// e is 1000 so when testing inc it fails rather than adding an extra conditional
-	var inc_map = map[string]int{"W": -LawnLength, "A": -1, "S": LawnLength, "D": 1, "E": 1000,
+	var incMap = map[string]int{"W": -LawnLength, "A": -1, "S": LawnLength, "D": 1, "E": 1000,
 		"↑": -LawnLength, "←": -1, "↓": LawnLength, "→": 1, "Space": 1000, " ": 1000}
-	var direc_map = map[string]int{"W": 0, "A": 3, "S": 1, "D": 2, "E": 0,
+	var direcMap = map[string]int{"W": 0, "A": 3, "S": 1, "D": 2, "E": 0,
 		"↑": 0, "←": 3, "↓": 1, "→": 2, "Space": 0, " ": 0}
-	if inc, ok := inc_map[key]; ok {
-		in_val_arg := ga.ind.holes[:]
-		if (key == "E" || key == "Space" || key == " ") && quickrand.InVals(ga.ind.player, &in_val_arg) && ga.prev_hole == -1 {
-			ga.prev_hole = ga.ind.player
+	if inc, ok := incMap[key]; ok {
+		inValArg := ga.ind.holes[:]
+		// handle gopher hole jump
+		if (key == "E" || key == "Space" || key == " ") && quickrand.InVals(ga.ind.player, &inValArg) && ga.prevHole == -1 {
+			ga.prevHole = ga.ind.player
 			ga.Lawn[ga.ind.player].Player.Has = false
 			// make sure gopher doesn't end up at same hole
 			temp := *quickrand.RandInts(len(ga.ind.holes)-1, 2, true)
@@ -97,23 +97,22 @@ func (ga *Garden) HandleKey(key string) bool {
 			ga.Lawn[ga.ind.player].Player.Has = true
 			ga.Lawn[ga.ind.player].Player.Direc = 0
 			return true
-		} else {
-			// handle basic gopher movement
-			if ga.ind.player+inc >= 0 && ga.ind.player+inc < LawnArea &&
-				(direc_map[key] <= 1 || ga.ind.player/LawnLength == (ga.ind.player+inc)/LawnLength) {
-				ga.Lawn[ga.ind.player].Player.Has = false
-				ga.ind.player += inc
-				ga.Lawn[ga.ind.player].Player.Has = true
-				ga.Lawn[ga.ind.player].Player.Direc = direc_map[key]
-				ga.prev_hole = -1
-				return true
-			}
+		}
+		// handle basic gopher movement
+		if ga.ind.player+inc >= 0 && ga.ind.player+inc < LawnArea &&
+			(direcMap[key] <= 1 || ga.ind.player/LawnLength == (ga.ind.player+inc)/LawnLength) {
+			ga.Lawn[ga.ind.player].Player.Has = false
+			ga.ind.player += inc
+			ga.Lawn[ga.ind.player].Player.Has = true
+			ga.Lawn[ga.ind.player].Player.Direc = direcMap[key]
+			ga.prevHole = -1
+			return true
 		}
 	}
 	return false
 }
 
-// returns slice of all entity and carrot vacant Grass inds
+// vacantGrass returns slice of all entity and carrot vacant Grass inds
 func (ga *Garden) vacantGrass() *[]int {
 	var vacant []int
 	for i := 0; i < LawnArea; i++ {
@@ -147,10 +146,10 @@ func (ga *Garden) handleCarrots() {
 	}
 }
 
-// handle periodic snake movements
+// MoveSnakes moves changes all snake positions by one grass
 func (ga *Garden) MoveSnakes() {
 	// FIX
-	var inc_map = map[int]int{0: -LawnLength, 1: LawnLength, 2: 1, 3: -1}
+	var incMap = map[int]int{0: -LawnLength, 1: LawnLength, 2: 1, 3: -1}
 	inBounds := func(old, new, direc int) bool {
 		// check that snakes are in the garden bounds and remain on their row or column respectively
 		if (direc > 1 && old/LawnLength != new/LawnLength) || new >= LawnArea || new < 0 || ga.Lawn[new].Snake.Has {
@@ -165,7 +164,7 @@ func (ga *Garden) MoveSnakes() {
 		// iterate over directions, if i == direc (direc that we want to change), don't check it
 		for j := 0; j < 4; j++ {
 			if j != direc {
-				if inBounds(ga.ind.snakes[i], ga.ind.snakes[i]+inc_map[j], j) {
+				if inBounds(ga.ind.snakes[i], ga.ind.snakes[i]+incMap[j], j) {
 					direcs = append(direcs, j)
 				}
 			}
@@ -197,7 +196,7 @@ func (ga *Garden) MoveSnakes() {
 		// when they hit the edge they should turn into a random valid direction
 		direc := ga.Lawn[ga.ind.snakes[i]].Snake.Direc
 		ok := true
-		if inBounds(ga.ind.snakes[i], ga.ind.snakes[i]+inc_map[direc], direc) {
+		if inBounds(ga.ind.snakes[i], ga.ind.snakes[i]+incMap[direc], direc) {
 			dice := (*quickrand.RandInts(2, 1, false))[0]
 			// roll for 1/3 chance to change direction to random new valid one
 			if dice == 0 {
@@ -206,7 +205,7 @@ func (ga *Garden) MoveSnakes() {
 			// ok is to make sure that snake was not tangled (b/c if so it shouldn't move forwards after the direc function sets it)
 			if ok {
 				ga.Lawn[ga.ind.snakes[i]].Snake.Has = false
-				ga.ind.snakes[i] += inc_map[direc]
+				ga.ind.snakes[i] += incMap[direc]
 				ga.Lawn[ga.ind.snakes[i]].Snake.Direc = direc
 				ga.Lawn[ga.ind.snakes[i]].Snake.Has = true
 			}
@@ -214,7 +213,7 @@ func (ga *Garden) MoveSnakes() {
 			direc, ok = getDirec(i, ga.Lawn[ga.ind.snakes[i]].Snake.Direc)
 			if ok {
 				ga.Lawn[ga.ind.snakes[i]].Snake.Has = false
-				ga.ind.snakes[i] += inc_map[direc]
+				ga.ind.snakes[i] += incMap[direc]
 				ga.Lawn[ga.ind.snakes[i]].Snake.Direc = direc
 				ga.Lawn[ga.ind.snakes[i]].Snake.Has = true
 			}
@@ -222,7 +221,7 @@ func (ga *Garden) MoveSnakes() {
 	}
 }
 
-// for rescaling offset values when window size changes
+// ScaleOffset rescales offset values when window size changes
 func (ga *Garden) ScaleOffset(len float32) {
 	for i := 0; i < LawnLength; i++ {
 		for j := 0; j < LawnLength; j++ {
@@ -231,18 +230,18 @@ func (ga *Garden) ScaleOffset(len float32) {
 	}
 }
 
-// should be called after every gopher movement and snake movement.
-// updates Garden state, for ex: if snake is on same square as gopher,
+// Update should be called after every gopher movement and snake movement.
+// Update updates Garden state, for ex: if snake is on same square as gopher,
 // gopher is dead and game is over.
-// returns the 2 Grass inds which need to be updated
+// Update also returns the 2 Grass inds which need to be updated
 func (ga *Garden) Update() [2]int {
 	// check if gopher is dead from snake
-	var in_val_arg []int
-	if in_val_arg = ga.ind.snakes[:]; quickrand.InVals(ga.ind.player, &in_val_arg) {
+	var inValArg []int
+	if inValArg = ga.ind.snakes[:]; quickrand.InVals(ga.ind.player, &inValArg) {
 		ga.Dead = true
 		// no suicide carrot eating. if gopher dies he will not collect the carrot on the square he died
 		// check if gopher ate carrot and handle carrot regen
-	} else if in_val_arg = ga.ind.carrots[:]; quickrand.InVals(ga.ind.player, &in_val_arg) {
+	} else if inValArg = ga.ind.carrots[:]; quickrand.InVals(ga.ind.player, &inValArg) {
 		ga.Score++
 		ga.Lawn[ga.ind.player].Carrot = false
 		// find which carrot ind is same as player and set it to -1 so handleCarrots() knows it is not in the garden
@@ -254,9 +253,9 @@ func (ga *Garden) Update() [2]int {
 		}
 		ga.handleCarrots()
 	}
-	if ga.prev_hole != -1 {
-		return [2]int{ga.ind.player, ga.prev_hole}
+	if ga.prevHole != -1 {
+		return [2]int{ga.ind.player, ga.prevHole}
 	}
-	var reverse_inc = map[int]int{0: LawnLength, 1: -LawnLength, 2: -1, 3: 1}
-	return [2]int{ga.ind.player, ga.ind.player + reverse_inc[ga.Lawn[ga.ind.player].Player.Direc]}
+	var reverseInc = map[int]int{0: LawnLength, 1: -LawnLength, 2: -1, 3: 1}
+	return [2]int{ga.ind.player, ga.ind.player + reverseInc[ga.Lawn[ga.ind.player].Player.Direc]}
 }
