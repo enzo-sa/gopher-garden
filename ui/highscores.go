@@ -23,30 +23,30 @@ func check(e error) {
 func (u *Ui) updateHs() {
 	// checks name and highscore in file and updates highscore or
 	// adds new entry if name is unrecognized
-	new_entry := true
+	newEntry := true
 	f, err := ioutil.ReadFile("highscores.txt")
 	check(err)
 	lines := strings.Split(string(f), "\n")
 	for i, line := range lines {
 		pair := strings.Split(line, " ")
 		if len(pair) > 2 {
-			temp_name := ""
+			tempName := ""
 			for i := 0; i < len(pair)-2; i++ {
-				temp_name += pair[i]
+				tempName += pair[i]
 			}
-			pair[0] = temp_name
+			pair[0] = tempName
 			pair[1] = pair[len(pair)-1]
 			pair = pair[0:2]
 		}
 		if pair[0] == u.name {
-			new_entry = false
+			newEntry = false
 			// make sure that there is no trailing CR char for windows systems
 			if strings.HasSuffix(pair[1], "\r") {
 				pair[1] = pair[1][:len(pair[1])-1]
 			}
-			prev_score, err := strconv.Atoi(pair[1])
+			prevScore, err := strconv.Atoi(pair[1])
 			check(err)
-			if u.ga.Score > prev_score {
+			if u.ga.Score > prevScore {
 				// set new highscore
 				pair[1] = strconv.Itoa(u.ga.Score)
 				lines[i] = strings.Join(pair, " ")
@@ -56,8 +56,8 @@ func (u *Ui) updateHs() {
 			}
 		}
 	}
-	// append new line with new name and highscore if name not found in file, i.e. new_entry is true
-	if new_entry {
+	// append new line with new name and highscore if name not found in file, i.e. newEntry is true
+	if newEntry {
 		lines = append(lines, fmt.Sprintf("%s %s", u.name, strconv.Itoa(u.ga.Score)))
 	}
 	rewrite := strings.Join(lines, "\n")
@@ -77,12 +77,12 @@ func (u *Ui) readHs() [5]hs {
 	for _, line := range lines {
 		pair := strings.Split(line, " ")
 		if len(pair) > 1 {
-			temp_name := ""
+			tempName := ""
 			if len(pair) > 2 {
 				for i := 0; i < len(pair)-1; i++ {
-					temp_name += pair[i]
+					tempName += pair[i]
 				}
-				pair[0] = temp_name
+				pair[0] = tempName
 				pair[1] = pair[len(pair)-1]
 			}
 			if strings.HasSuffix(pair[1], "\r") {
