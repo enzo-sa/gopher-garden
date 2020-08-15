@@ -23,7 +23,9 @@ import (
 // main ui is handled here
 
 var topMenuPx float32 = engine.LawnLength * 10
+// HeightPx represents game display height in pixels (varies as window size changes)
 var HeightPx float32 = engine.LawnLength*100 + topMenuPx
+// WidthPx represents game display width in pixels (varies as window size changes)
 var WidthPx float32 = engine.LawnLength * 100
 
 func getPath() string {
@@ -51,23 +53,25 @@ var carrot2Img = paint.NewImageOp(getImg(path + "/resources/carrot2.png"))
 var grassBkgImg = paint.NewImageOp(getImg(path + "/resources/grass-background.png"))
 var titleImg = paint.NewImageOp(getImg(path + "/resources/title-screen.png"))
 
+// Ui struct contains main elements of the ui
 type Ui struct {
 	w                  *app.Window
 	gtx                layout.Context
 	th                 *material.Theme
 	ga                 *engine.Garden
 	name               string
-	menu_btn           btn
-	continue_btn       btn
-	highscores_btn     btn
-	backhighscores_btn btn
-	newgame_btn        btn
-	backmenu_btn       btn
-	exit_btn           btn
-	name_editor        *widget.Editor
-	title_screen       bool
+	menuBtn           btn
+	continueBtn       btn
+	highscoresBtn     btn
+	backhighscoresBtn btn
+	newgameBtn        btn
+	backmenuBtn       btn
+	exitBtn           btn
+	nameEditor        *widget.Editor
+	titleScreen       bool
 }
 
+// NewUi returns an initialized Ui struct
 func NewUi(w *app.Window) *Ui {
 	u := Ui{
 		w:  w,
@@ -76,12 +80,12 @@ func NewUi(w *app.Window) *Ui {
 	}
 	u.th.TextSize = unit.Dp(topMenuPx / 5)
 	u.ga.ScaleOffset(WidthPx)
-	u.name_editor = &widget.Editor{
+	u.nameEditor = &widget.Editor{
 		SingleLine: true,
 		Submit:     true,
 	}
-	u.menu_btn.pressed = true
-	u.title_screen = true
+	u.menuBtn.pressed = true
+	u.titleScreen = true
 	return &u
 }
 
@@ -110,14 +114,14 @@ func (i ind) grass(gtx layout.Context, lawn *[engine.LawnArea]engine.Grass, dead
 		if dead {
 			paint.ImageOp(gopherDeadImg).Add(gtx.Ops)
 		} else {
-			player_direc := map[int]paint.ImageOp{0: gopherUImg, 1: gopherDImg, 2: gopherRImg, 3: gopherLImg}
-			paint.ImageOp(player_direc[g.Player.Direc]).Add(gtx.Ops)
+			playerDirec := map[int]paint.ImageOp{0: gopherUImg, 1: gopherDImg, 2: gopherRImg, 3: gopherLImg}
+			paint.ImageOp(playerDirec[g.Player.Direc]).Add(gtx.Ops)
 		}
 		draw()
 	}
 	if g.Snake.Has {
-		snake_direc := map[int]paint.ImageOp{0: snakeUImg, 1: snakeDImg, 2: snakeRImg, 3: snakeLImg}
-		paint.ImageOp(snake_direc[g.Snake.Direc]).Add(gtx.Ops)
+		snakeDirec := map[int]paint.ImageOp{0: snakeUImg, 1: snakeDImg, 2: snakeRImg, 3: snakeLImg}
+		paint.ImageOp(snakeDirec[g.Snake.Direc]).Add(gtx.Ops)
 		draw()
 	}
 }
@@ -153,57 +157,58 @@ func (u *Ui) full() {
 	for i := 0; i < engine.LawnArea; i++ {
 		ind(i).grass(u.gtx, u.ga.Lawn, u.ga.Dead)
 	}
-	if u.ga.Dead && !u.menu_btn.pressed {
+	if u.ga.Dead && !u.menuBtn.pressed {
 		u.gameOver()
 	}
-	if u.menu_btn.pressed {
+	if u.menuBtn.pressed {
 		paint.ColorOp{Color: color.RGBA{0, 0, 0, 0xdf}}.Add(u.gtx.Ops)
 		paint.PaintOp{Rect: f32.Rect(0, 0, WidthPx, HeightPx)}.Add(u.gtx.Ops)
-		if u.title_screen {
+		if u.titleScreen {
 			paint.ImageOp(titleImg).Add(u.gtx.Ops)
 			paint.PaintOp{Rect: f32.Rect(0, topMenuPx, WidthPx, HeightPx)}.Add(u.gtx.Ops)
 		}
-		if !u.newgame_btn.pressed {
+		if !u.newgameBtn.pressed {
 			u.mainMenu()
 		}
 	}
-	if u.highscores_btn.pressed {
+	if u.highscoresBtn.pressed {
 		u.drawHs()
 	}
 	// get name when newgame button is pressed
-	if u.newgame_btn.pressed && !u.highscores_btn.pressed {
-		u.title_screen = false
+	if u.newgameBtn.pressed && !u.highscoresBtn.pressed {
+		u.titleScreen = false
 		u.getName()
 	}
 }
 
+// Loop is the main ui loop which constantly draws frames and handles input
 func (u *Ui) Loop() error {
 	// snake ticker
 	// channel dec is sent every 5 carrots collected and it decreases interval time
-	start_interval := float64(1500)
+	startInterval := float64(1500)
 	dec := make(chan bool)
 	reset := make(chan bool)
-	ticker := time.NewTicker(time.Duration(start_interval) * time.Millisecond)
+	ticker := time.NewTicker(time.Duration(startInterval) * time.Millisecond)
 	go func() {
-		dec_counter := 1.0
+		decCounter := 1.0
 		for {
 			select {
 			// accelerate interval frequency / decrease interval time
 			case <-dec:
 				ticker.Stop()
-				dec_counter += 0.25
-				ticker = time.NewTicker(time.Duration(start_interval/dec_counter) * time.Millisecond)
-			// send reset every new game. reset sets dec_counter back to start
+				decCounter += 0.25
+				ticker = time.NewTicker(time.Duration(startInterval/decCounter) * time.Millisecond)
+			// send reset every new game. reset sets decCounter back to start
 			case <-reset:
 				ticker.Stop()
-				dec_counter = 1.0
-				ticker = time.NewTicker(time.Duration(start_interval/dec_counter) * time.Millisecond)
+				decCounter = 1.0
+				ticker = time.NewTicker(time.Duration(startInterval/decCounter) * time.Millisecond)
 			}
 		}
 	}()
 	// main loop
 	var ops op.Ops
-	var ticker_switch bool
+	var tickerSwitch bool
 	for {
 		select {
 		case e := <-u.w.Events():
@@ -218,37 +223,37 @@ func (u *Ui) Loop() error {
 				// upon that image would end up being less efficient than simply
 				// redrawing all of the squares each time
 				if u.ga.Dead {
-					if u.continue_btn.pressed {
-						u.menu_btn.pressed = true
-						u.continue_btn.pressed = false
+					if u.continueBtn.pressed {
+						u.menuBtn.pressed = true
+						u.continueBtn.pressed = false
 						// locally save name and score data when continue button pressed
 						u.updateHs()
 						// reset name data
 						u.name = ""
 					}
 				}
-				if u.backhighscores_btn.pressed {
-					u.highscores_btn.pressed = false
-					u.backhighscores_btn.pressed = false
+				if u.backhighscoresBtn.pressed {
+					u.highscoresBtn.pressed = false
+					u.backhighscoresBtn.pressed = false
 				}
-				if u.menu_btn.pressed && !u.highscores_btn.pressed {
-					if u.backmenu_btn.pressed {
-						if !u.title_screen {
-							u.menu_btn.pressed = false
+				if u.menuBtn.pressed && !u.highscoresBtn.pressed {
+					if u.backmenuBtn.pressed {
+						if !u.titleScreen {
+							u.menuBtn.pressed = false
 						}
-						u.backmenu_btn.pressed = false
+						u.backmenuBtn.pressed = false
 					}
-					if u.newgame_btn.pressed {
+					if u.newgameBtn.pressed {
 						// dont start newgame until name is entered
 						if u.name != "" {
 							u.ga = engine.NewGame()
 							// reset snake ticker on newgame
 							reset <- true
-							u.menu_btn.pressed = false
-							u.newgame_btn.pressed = false
+							u.menuBtn.pressed = false
+							u.newgameBtn.pressed = false
 						}
 					}
-					if u.exit_btn.pressed {
+					if u.exitBtn.pressed {
 						print("Exiting.\n")
 						return nil
 					}
@@ -258,24 +263,24 @@ func (u *Ui) Loop() error {
 				u.full()
 				e.Frame(u.gtx.Ops)
 				if u.ga.Score%5 != 0 {
-					ticker_switch = true
+					tickerSwitch = true
 				}
 				// update ticker if 5th carrot eaten
-				if u.ga.Score%5 == 0 && u.ga.Score != 0 && ticker_switch {
+				if u.ga.Score%5 == 0 && u.ga.Score != 0 && tickerSwitch {
 					dec <- true
-					ticker_switch = false
+					tickerSwitch = false
 				}
 			case key.Event:
-				if !u.ga.Dead && !u.menu_btn.pressed {
+				if !u.ga.Dead && !u.menuBtn.pressed {
 					if ok := u.ga.HandleKey(e.Name); ok {
 						u.w.Invalidate()
 					}
 				}
 			case system.ClipboardEvent:
-				u.name_editor.SetText(e.Text)
+				u.nameEditor.SetText(e.Text)
 			}
 		case <-ticker.C:
-			if !u.menu_btn.pressed {
+			if !u.menuBtn.pressed {
 				u.ga.MoveSnakes()
 				u.w.Invalidate()
 			}
