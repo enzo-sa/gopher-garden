@@ -24,7 +24,7 @@ func (u *Ui) updateHs() {
 	// checks name and highscore in file and updates highscore or
 	// adds new entry if name is unrecognized
 	new_entry := true
-	f, err := ioutil.ReadFile("ui/highscores.txt")
+	f, err := ioutil.ReadFile("highscores.txt")
 	check(err)
 	lines := strings.Split(string(f), "\n")
 	for i, line := range lines {
@@ -61,14 +61,14 @@ func (u *Ui) updateHs() {
 		lines = append(lines, fmt.Sprintf("%s %s", u.name, strconv.Itoa(u.ga.Score)))
 	}
 	rewrite := strings.Join(lines, "\n")
-	err = ioutil.WriteFile("ui/highscores.txt", []byte(rewrite), 0644)
+	err = ioutil.WriteFile("highscores.txt", []byte(rewrite), 0644)
 	check(err)
 }
 
 // returns top 5 highscore and name value pairs
 func (u *Ui) readHs() [5]hs {
 	var top = [...]hs{hs{"", -1}, hs{"", -1}, hs{"", -1}, hs{"", -1}, hs{"", -1}}
-	f, err := ioutil.ReadFile("ui/highscores.txt")
+	f, err := ioutil.ReadFile("highscores.txt")
 	check(err)
 	lines := strings.Split(string(f), "\n")
 	if lines[0] == "" {
