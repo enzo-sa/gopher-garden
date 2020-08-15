@@ -23,8 +23,10 @@ import (
 // main ui is handled here
 
 var topMenuPx float32 = engine.LawnLength * 10
+
 // HeightPx represents game display height in pixels (varies as window size changes)
 var HeightPx float32 = engine.LawnLength*100 + topMenuPx
+
 // WidthPx represents game display width in pixels (varies as window size changes)
 var WidthPx float32 = engine.LawnLength * 100
 
@@ -55,11 +57,11 @@ var titleImg = paint.NewImageOp(getImg(path + "/resources/title-screen.png"))
 
 // Ui struct contains main elements of the ui
 type Ui struct {
-	w                  *app.Window
-	gtx                layout.Context
-	th                 *material.Theme
-	ga                 *engine.Garden
-	name               string
+	w                 *app.Window
+	gtx               layout.Context
+	th                *material.Theme
+	ga                *engine.Garden
+	name              string
 	menuBtn           btn
 	continueBtn       btn
 	highscoresBtn     btn
