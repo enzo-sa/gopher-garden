@@ -48,7 +48,7 @@ For a complete installation of Gopher-Garden, please perform the following steps
 Following these steps should allow you to run the game, however if you come across any issues, feel free to notify me through github.
 
 ## CREDITS:
-This game is based off of the [Go gopher](https://blog.golang.org/gopher#:~:text=The%20Go%20gopher%20is%20an,radio%20station%20in%20New%20Jersey.) which was designed by [Renee French](http://reneefrench.blogspot.com/) and is licensed under [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/legalcode).
+This game is based off of the [Go gopher](https://blog.golang.org/gopher#:~:text=The%20Go%20gopher%20is%20an,radio%20station%20in%20New%20Jersey.) which was designed by [Renée French](http://reneefrench.blogspot.com/) and is licensed under [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/legalcode).
 
 A detailed list of image credits can be found in [CREDITS](https://github.com/enzo-sa/gopher-garden/blob/master/ui/resources/CREDITS.md).
 ## LICENSE:
