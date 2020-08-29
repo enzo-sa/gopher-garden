@@ -146,9 +146,8 @@ func (ga *Garden) handleCarrots() {
 	}
 }
 
-// MoveSnakes moves changes all snake positions by one grass
+// MoveSnakes moves all snake positions by one grass
 func (ga *Garden) MoveSnakes() {
-	// FIX
 	var incMap = map[int]int{0: -LawnLength, 1: LawnLength, 2: 1, 3: -1}
 	inBounds := func(old, new, direc int) bool {
 		// check that snakes are in the garden bounds and remain on their row or column respectively
