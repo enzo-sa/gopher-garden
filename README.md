@@ -1,6 +1,6 @@
 # Gopher-Garden
 ## Overview:
-[![Go Report Card](https://goreportcard.com/badge/github.com/enzo-sa/gopher-garden)](https://goreportcard.com/report/github.com/enzo-sa/gopher-garden) [![License](https://img.shields.io/badge/license-BSD--3--Clause-red)](https://github.com/enzo-sa/gopher-garden/blob/master/LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/enzosaracen/gopher-garden)](https://goreportcard.com/report/github.com/enzo-sa/gopher-garden) [![License](https://img.shields.io/badge/license-BSD--3--Clause-red)](https://github.com/enzo-sa/gopher-garden/blob/master/LICENSE)
 ### Play as Garry the Gopher and collect as many carrots as you can whilst avoiding the evil overlords of the garden: _**the snakes**_!
 <img src="https://raw.githubusercontent.com/enzo-sa/gopher-garden/master/gopher-garden.png" width="600">
 
