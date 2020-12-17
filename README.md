@@ -1,8 +1,8 @@
 # Gopher-Garden
 ## Overview:
-[![Go Report Card](https://goreportcard.com/badge/github.com/enzosaracen/gopher-garden)](https://goreportcard.com/report/github.com/enzo-sa/gopher-garden) [![License](https://img.shields.io/badge/license-BSD--3--Clause-red)](https://github.com/enzo-sa/gopher-garden/blob/master/LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/enzosaracen/gopher-garden)](https://goreportcard.com/report/github.com/enzosaracen/gopher-garden) [![License](https://img.shields.io/badge/license-BSD--3--Clause-red)](https://github.com/enzosaracen/gopher-garden/blob/master/LICENSE)
 ### Play as Garry the Gopher and collect as many carrots as you can whilst avoiding the evil overlords of the garden: _**the snakes**_!
-<img src="https://raw.githubusercontent.com/enzo-sa/gopher-garden/master/gopher-garden.png" width="600">
+<img src="https://raw.githubusercontent.com/enzosaracen/gopher-garden/master/gopher-garden.png" width="600">
 
 #### Gopher-Garden is a 2D game in which you control Garry the Gopher who moves around a garden and who's goal is to eat as many carrots as he can whilst avoiding deadly snakes which are in constant roam around the garden.
 
@@ -51,6 +51,6 @@ Following these steps should allow you to run the game, however if you come acro
 ## CREDITS:
 This game is based off of the [Go gopher](https://blog.golang.org/gopher#:~:text=The%20Go%20gopher%20is%20an,radio%20station%20in%20New%20Jersey.) which was designed by [Renée French](http://reneefrench.blogspot.com/) and is licensed under [Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/legalcode).
 
-A detailed list of image credits can be found in [CREDITS](https://github.com/enzo-sa/gopher-garden/blob/master/ui/resources/CREDITS.md).
+A detailed list of image credits can be found in [CREDITS](https://github.com/enzosaracen/gopher-garden/blob/master/ui/resources/CREDITS.md).
 ## LICENSE:
-Gopher-Garden is licensed under __**BSD-3-Clause License**__. For more information see [LICENSE](https://github.com/enzo-sa/gopher-garden/blob/master/LICENSE).
+Gopher-Garden is licensed under __**BSD-3-Clause License**__. For more information see [LICENSE](https://github.com/enzosaracen/gopher-garden/blob/master/LICENSE).
