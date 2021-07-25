@@ -3,8 +3,6 @@
 
 * Gopher-Garden is written entirely in Go 1.14 and uses [Gio](https://gioui.org/), a portable immediate mode GUI implemented in Go and developed by [Elias Naur](https://eliasnaur.com/), for graphics and user-input.
 
-* Gopher-Garden will save all highscores and the user-names that correspond to them in a local file who's data can be viewed through the in-game menu.
-
 ## Game Controls:
    ### Text Fields:
 *	**At the start of every new round, the user will be prompted to enter their name.**
